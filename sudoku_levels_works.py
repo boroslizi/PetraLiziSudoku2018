@@ -27,6 +27,15 @@ grid = []
 index_cap = {"A": 1, "B": 2, "C": 3, "D": 4, "E": 5, "F": 6, "G": 7, "H": 8, "I": 9}
 index_small = {"a": 1, "b": 2, "c": 3, "d": 4, "e": 5, "f": 6, "g": 7, "h": 8, "i": 9}
 
+# error messages used
+error1 = "\nThis number is already in that row."
+error2 = "\nThis number is already in that column."
+error3 = "\nOriginal board cannot be modified."
+error4 = "\nNumber must be between 1 and 9."
+error5 = "\nPlease enter a number from the list below."
+error6 = "\nPlease enter either \"y\" or \"n\" after choosing save."
+error7 = "\nPlease enter requested characters."
+
 
 # middle part of long print line in print_sudoku
 def long_line():
@@ -54,20 +63,20 @@ def grid_new(board):
     num = int(input("Enter a number (1-9): "))
     if num in board[int(index_cap[row_in]) - 1]:
         os.system("clear")
-        print(ebegin + "\nThis number is already in that row." + eend)
+        print(ebegin + error1 + eend)
     elif num in [col[int(index_small[column_in])] for col in board]:
         os.system("clear")
-        print(ebegin + "\nThis number is already in that column." + eend)
+        print(ebegin + error2 + eend)
     elif num > 0 and num < 10:
         if grid0[int(index_cap[row_in]) - 1][int(index_small[(column_in)])] == 0:
             board[int(index_cap[row_in]) - 1][int(index_small[(column_in)])] = num
             os.system("clear")
         else:
             os.system("clear")
-            print(ebegin + "\nOriginal board cannot be modified." + eend)
+            print(ebegin + error3 + eend)
     else:
         os.system("clear")
-        print(ebegin + "\nNumber must be between 1 and 9." + eend)
+        print(ebegin + error4 + eend)
     return board
 
 
@@ -81,7 +90,7 @@ def grid_delete(board):
         os.system("clear")
     else:
         os.system("clear")
-        print(ebegin + "\nOriginal board cannot be modified." + eend)
+        print(ebegin + error3 + eend)
     return board
 
 
@@ -127,10 +136,10 @@ while True:
                 break
         else:
             os.system("clear")
-            print(ebegin + "\nPlease enter a number from the list below." + eend)
+            print(ebegin + error5 + eend)
     except ValueError:
         os.system("clear")
-        print(ebegin + "\nPlease enter a number from the list below." + eend)
+        print(ebegin + error5 + eend)
 
 
 # menu3
@@ -162,20 +171,20 @@ while True:
                     print_sudoku(grid)
                 else:
                     os.system("clear")
-                    print(ebegin + "\nPlease enter either \"y\" or \"n\" after choosing save." + eend)
+                    print(ebegin + error6 + eend)
                     print_sudoku(grid)
             elif action3 == 4:
                 break
             else:
                 os.system("clear")
-                print(ebegin + "\nPlease enter a number from the list below." + eend)
+                print(ebegin + error5 + eend)
                 print_sudoku(grid)
         except (ValueError, KeyError):
             os.system("clear")
-            print(ebegin + "\nPlease enter requested characters." + eend)
+            print(ebegin + error7 + eend)
             print_sudoku(grid)
     except ValueError:
         os.system("clear")
         os.system("clear")
-        print(ebegin + "\nPlease enter a number from the list below." + eend)
+        print(ebegin + error5 + eend)
         print_sudoku(grid)
