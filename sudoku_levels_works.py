@@ -1,7 +1,7 @@
 import os
 import sys
 from copy import deepcopy
-from grids import easy, medium, hard
+from grids import easy, medium, hard, win0, winwin
 os.system("clear")
 
 # original numbers color (lol, álmodik a nyomor)
@@ -46,13 +46,13 @@ def grid_new(board):
     row_in = str(input("\nSelect a row (A - I): "))
     column_in = str(input("Select a column (a - i): "))
     num = int(input("Enter a number (1-9): "))
-    if num in board[int(index_cap[row_in]) - 1]:
+    if num in board[int(index_cap[row_in]) - 1]: # checking row
         os.system("clear")
         print(ebegin + "\nThis number is already in that row." + eend)
-    elif num in [col[int(index_small[column_in])] for col in board]:
+    elif num in [col[int(index_small[column_in])] for col in board]: # checking column
         os.system("clear")
         print(ebegin + "\nThis number is already in that column." + eend)
-    elif num > 0 and num < 10:
+    elif num > 0 and num < 10: # checking if number is between 1 and 9
         if grid0[int(index_cap[row_in]) - 1][int(index_small[(column_in)])] == 0:
             board[int(index_cap[row_in]) - 1][int(index_small[(column_in)])] = num
             os.system("clear")
@@ -79,7 +79,7 @@ def grid_delete(board):
     return board
 
 
-# menu
+# menu1 & menu2
 while True:
     print("\nWelcome to the Sudoku Game!\nMenu:")
     print("[1] Print New Board")
@@ -110,6 +110,12 @@ while True:
                 os.system("clear")
                 print_sudoku(grid0)
                 break
+            elif action2 == 4:
+                grid0 = win0
+                grid = deepcopy(grid0)
+                os.system("clear")
+                print_sudoku(grid0)
+                break
         else:
             os.system("clear")
             print(ebegin + "\nPlease enter a number from the list below." + eend)
@@ -120,36 +126,47 @@ while True:
 
 # menu3
 while True:
-    print("\n[1] Add number")
-    print("[2] Delete number")
-    print("[3] Save game")
-    print("[4] Exit game")
-    try:
-        action3 = int(input("\nWhat would you like to do? "))
+    if grid == winwin: # winning
+        print(cbegin + """
+     __        __  ___   _   _   _
+     \ \      / / |_ _| | \ | | | |
+      \ \ /\ / /   | |  |  \| | | |
+       \ V  V /    | |  | |\  | |_|
+        \_/\_/    |___| |_| \_| (_)
+
+    """ + cend)
+        break
+    else:
+        print("\n[1] Add number")
+        print("[2] Delete number")
+        print("[3] Save game")
+        print("[4] Exit game")
         try:
-            if action3 == 1:
-                grid = grid_new(grid)
-                print_sudoku(grid)
-            elif action3 == 2:
-                grid = grid_delete(grid)
-                print_sudoku(grid)
-            elif action3 == 3:
-                file = "saved_sudoku.txt"
-                file = open(file, "w")
-                file.write(grid)
-                file.close()
-            elif action3 == 4:
-                break
-            else:
+            action3 = int(input("\nWhat would you like to do? "))
+            try:
+                if action3 == 1:
+                    grid = grid_new(grid)
+                    print_sudoku(grid)
+                elif action3 == 2:
+                    grid = grid_delete(grid)
+                    print_sudoku(grid)
+                elif action3 == 3:
+                    file = "saved_sudoku.txt"
+                    file = open(file, "w")
+                    file.write(grid)
+                    file.close()
+                elif action3 == 4:
+                    break
+                else:
+                    os.system("clear")
+                    print(ebegin + "\nPlease enter a number from the list below." + eend)
+                    print_sudoku(grid)
+            except (ValueError, KeyError):
                 os.system("clear")
-                print(ebegin + "\nPlease enter a number from the list below." + eend)
+                print(ebegin + "\nPlease enter requested characters." + eend)
                 print_sudoku(grid)
-        except (ValueError, KeyError):
+        except ValueError:
             os.system("clear")
-            print(ebegin + "\nPlease enter requested characters." + eend)
+            os.system("clear")
+            print(ebegin + "\nPlease enter a number from the list below." + eend)
             print_sudoku(grid)
-    except ValueError:
-        os.system("clear")
-        os.system("clear")
-        print(ebegin + "\nPlease enter a number from the list below." + eend)
-        print_sudoku(grid)
