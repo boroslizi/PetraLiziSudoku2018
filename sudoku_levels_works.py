@@ -152,6 +152,18 @@ while True:
                 file = "saved_sudoku.pickle"
                 with open(file, "wb") as f:
                     pickle.dump(grid, f)
+                saving = input("Are you sure you want to save and quit? (y/n)")
+                if saving == "y":
+                    os.system("clear")
+                    print("Sudoku game saved!\n")
+                    break
+                elif saving == "n":
+                    os.system("clear")
+                    print_sudoku(grid)
+                else:
+                    os.system("clear")
+                    print(ebegin + "\nPlease enter either \"y\" or \"n\" after choosing save." + eend)
+                    print_sudoku(grid)
             elif action3 == 4:
                 break
             else:
