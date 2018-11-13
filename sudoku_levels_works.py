@@ -35,6 +35,7 @@ error4 = "\nNumber must be between 1 and 9."
 error5 = "\nPlease enter a number from the list below."
 error6 = "\nPlease enter either \"y\" or \"n\" after choosing save."
 error7 = "\nPlease enter requested characters."
+error8 = "\nThis number is already in that grid."
 
 
 # middle part of long print line in print_sudoku
@@ -61,21 +62,25 @@ def grid_new(board):
     row_in = str(input("\nSelect a row (A - I): "))
     column_in = str(input("Select a column (a - i): "))
     num = int(input("Enter a number (1-9): "))
+    os.system("clear")
     if num in board[int(index_cap[row_in]) - 1]:  # checking row
-        os.system("clear")
         print(ebegin + error1 + eend)
     elif num in [col[int(index_small[column_in])] for col in board]:  # checking column
-        os.system("clear")
         print(ebegin + error2 + eend)
+    elif row_in in ["A", "B", "C"] and column_in in ["a", "b", "c"]:
+        for grid1_1 in [board[0][1:4], board[1][1:4], board[2][1:4]]:
+            if num in grid1_1:
+                print(ebegin + error8 + eend)
+    elif row_in in ["A", "B", "C"] and column_in in ["d", "e", "f"]:
+        for grid1_2 in [board[0][4:7], board[1][4:7], board[2][4:7]]:
+            if num in grid1_2:
+                print(ebegin + error8 + eend)
     elif num > 0 and num < 10:  # checking if number is between 1 and 9
         if grid0[int(index_cap[row_in]) - 1][int(index_small[(column_in)])] == 0:
             board[int(index_cap[row_in]) - 1][int(index_small[(column_in)])] = num
-            os.system("clear")
         else:
-            os.system("clear")
             print(ebegin + error3 + eend)
     else:
-        os.system("clear")
         print(ebegin + error4 + eend)
     return board
 
@@ -87,15 +92,22 @@ def grid_delete(board):
     column_in = str(input("Select a column (a - i): "))
     if grid0[int(index_cap[row_in]) - 1][int(index_small[(column_in)])] == 0:
         board[int(index_cap[row_in]) - 1][int(index_small[(column_in)])] = 0
-        os.system("clear")
     else:
-        os.system("clear")
         print(ebegin + error3 + eend)
+    os.system("clear")
     return board
 
 
 # menu1 & menu2
 while True:
+    print(cbegin + """
+  ____                _           _                _____       _
+ / ___|   _   _    __| |   ___   | | __  _   _    |___ /      / |
+ \___ \  | | | |  / _` |  / _ \  | |/ / | | | |     |_ \      | |
+  ___) | | |_| | | (_| | | (_) | |   <  | |_| |    ___) |  _  | |
+ |____/   \__,_|  \__,_|  \___/  |_|\_\  \__,_|   |____/  (_) |_|
+
+    """ + cend)
     print("\nWelcome to the Sudoku Game!\nMenu:")
     print("[1] Print New Board")
     print("[2] Load Saved Game")
@@ -201,7 +213,6 @@ while True:
                 print(ebegin + error7 + eend)
                 print_sudoku(grid)
         except ValueError:
-            os.system("clear")
             os.system("clear")
             print(ebegin + error5 + eend)
             print_sudoku(grid)
