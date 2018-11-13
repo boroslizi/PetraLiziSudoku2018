@@ -1,5 +1,6 @@
 import os
 import sys
+import pickle
 from copy import deepcopy
 from grids import easy, medium, hard, win0, winwin
 os.system("clear")
@@ -26,13 +27,27 @@ grid = []
 index_cap = {"A": 1, "B": 2, "C": 3, "D": 4, "E": 5, "F": 6, "G": 7, "H": 8, "I": 9}
 index_small = {"a": 1, "b": 2, "c": 3, "d": 4, "e": 5, "f": 6, "g": 7, "h": 8, "i": 9}
 
+# error messages used
+error1 = "\nThis number is already in that row."
+error2 = "\nThis number is already in that column."
+error3 = "\nOriginal board cannot be modified."
+error4 = "\nNumber must be between 1 and 9."
+error5 = "\nPlease enter a number from the list below."
+error6 = "\nPlease enter either \"y\" or \"n\" after choosing save."
+error7 = "\nPlease enter requested characters."
+
+
+# middle part of long print line in print_sudoku
+def long_line():
+    return (" {} " + gbegin + "│" + gend + " {} " + gbegin + "│" + gend + " {} " + gbegin + "║" + gend)
+
 
 # printing the original grid
 def print_sudoku(board):
     print(gbegin + "\n    a   b   c   d   e   f   g   h   i  " + gend)
     print(gbegin + "  ╔" + ("═══╤═══╤═══╦"*2) + "═══╤═══╤═══╗" + gend)
     for i, row in enumerate(board):
-            print((gbegin + "{} ║" + gend + (" {} " + gbegin + "│" + gend + " {} " + gbegin + "│" + gend + " {} " + gbegin + "║" + gend)*3).format(*[x if x != 0 else " " for x in row]))
+            print((gbegin + "{} ║" + gend + (long_line())*3).format(*[x if x != 0 else " " for x in row]))
             if i % 3 == 2 and i < 8:
                 print(gbegin + "  ╠" + ("═══╪═══╪═══╬"*2) + "═══╪═══╪═══╣" + gend)
             elif i == 8:
@@ -46,22 +61,22 @@ def grid_new(board):
     row_in = str(input("\nSelect a row (A - I): "))
     column_in = str(input("Select a column (a - i): "))
     num = int(input("Enter a number (1-9): "))
-    if num in board[int(index_cap[row_in]) - 1]: # checking row
+    if num in board[int(index_cap[row_in]) - 1]:  # checking row
         os.system("clear")
-        print(ebegin + "\nThis number is already in that row." + eend)
-    elif num in [col[int(index_small[column_in])] for col in board]: # checking column
+        print(ebegin + error1 + eend)
+    elif num in [col[int(index_small[column_in])] for col in board]:  # checking column
         os.system("clear")
-        print(ebegin + "\nThis number is already in that column." + eend)
-    elif num > 0 and num < 10: # checking if number is between 1 and 9
+        print(ebegin + error2 + eend)
+    elif num > 0 and num < 10:  # checking if number is between 1 and 9
         if grid0[int(index_cap[row_in]) - 1][int(index_small[(column_in)])] == 0:
             board[int(index_cap[row_in]) - 1][int(index_small[(column_in)])] = num
             os.system("clear")
         else:
             os.system("clear")
-            print(ebegin + "\nOriginal board cannot be modified." + eend)
+            print(ebegin + error3 + eend)
     else:
         os.system("clear")
-        print(ebegin + "\nNumber must be between 1 and 9." + eend)
+        print(ebegin + error4 + eend)
     return board
 
 
@@ -75,7 +90,7 @@ def grid_delete(board):
         os.system("clear")
     else:
         os.system("clear")
-        print(ebegin + "\nOriginal board cannot be modified." + eend)
+        print(ebegin + error3 + eend)
     return board
 
 
@@ -116,17 +131,26 @@ while True:
                 os.system("clear")
                 print_sudoku(grid0)
                 break
+        elif action == 2:
+            os.system("clear")
+            file = "saved_sudoku.pickle"
+            with open(file, "rb") as f:
+                grid0 = pickle.load(f)
+                grid = deepcopy(grid0)
+                os.system("clear")
+                print_sudoku(grid0)
+                break
         else:
             os.system("clear")
-            print(ebegin + "\nPlease enter a number from the list below." + eend)
+            print(ebegin + error5 + eend)
     except ValueError:
         os.system("clear")
-        print(ebegin + "\nPlease enter a number from the list below." + eend)
+        print(ebegin + error5 + eend)
 
 
 # menu3
 while True:
-    if grid == winwin: # winning
+    if grid == winwin:  # winning
         print(cbegin + """
      __        __  ___   _   _   _
      \ \      / / |_ _| | \ | | | |
@@ -151,22 +175,33 @@ while True:
                     grid = grid_delete(grid)
                     print_sudoku(grid)
                 elif action3 == 3:
-                    file = "saved_sudoku.txt"
-                    file = open(file, "w")
-                    file.write(grid)
-                    file.close()
+                    file = "saved_sudoku.pickle"
+                    with open(file, "wb") as f:
+                        pickle.dump(grid, f)
+                    saving = input("Are you sure you want to save and quit? (y/n)")
+                    if saving == "y":
+                        os.system("clear")
+                        print("Sudoku game saved!\n")
+                        break
+                    elif saving == "n":
+                        os.system("clear")
+                        print_sudoku(grid)
+                    else:
+                        os.system("clear")
+                        print(ebegin + error6 + eend)
+                        print_sudoku(grid)
                 elif action3 == 4:
                     break
                 else:
                     os.system("clear")
-                    print(ebegin + "\nPlease enter a number from the list below." + eend)
+                    print(ebegin + error5 + eend)
                     print_sudoku(grid)
-            except (ValueError, KeyError):
+            except ValueError:
                 os.system("clear")
-                print(ebegin + "\nPlease enter requested characters." + eend)
+                print(ebegin + error7 + eend)
                 print_sudoku(grid)
         except ValueError:
             os.system("clear")
             os.system("clear")
-            print(ebegin + "\nPlease enter a number from the list below." + eend)
+            print(ebegin + error5 + eend)
             print_sudoku(grid)
