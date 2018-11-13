@@ -5,7 +5,7 @@ from copy import deepcopy
 from grids import easy, medium, hard, win0, winwin
 os.system("clear")
 
-# different color used for printing
+# different colors used for printing
 COLORS = {"red": "\033[91m", "blue": "\033[34m", "grey": "\033[90m", "white": "\033[0m"}
 
 # row and column indexing
@@ -82,10 +82,8 @@ def grid_delete(board, c_error, c_end):
     return board
 
 
-# menu1 & menu2
-while True:
-    grid0 = []  # original grid, not to be modified
-    grid = []  # second grid, zeros can be modified
+# printing menu1
+def print_menuOne():
     print(COLORS["blue"] + r"""
   ____                _           _                _____       _
  / ___|   _   _    __| |   ___   | | __  _   _    |___ /      / |
@@ -97,13 +95,45 @@ while True:
     print("\nWelcome to the Sudoku Game!\nMenu:")
     print("[1] Print New Board")
     print("[2] Load Saved Game")
+
+
+# printing menu2
+def print_menuTwo():
+    print("\n[1] Easy")
+    print("[2] Medium")
+    print("[3] Hard")
+
+
+# printing menu3
+def print_menuThree():
+    print("\n[1] Add number")
+    print("[2] Delete number")
+    print("[3] Save game")
+    print("[4] Exit game")
+
+
+# printing win text
+def print_win():
+    print(COLORS["blue"] + r"""
+     __        __  ___   _   _   _
+     \ \      / / |_ _| | \ | | | |
+      \ \ /\ / /   | |  |  \| | | |
+       \ V  V /    | |  | |\  | |_|
+        \_/\_/    |___| |_| \_| (_)
+
+    """ + COLORS["white"])
+
+
+# menu1 & menu2 & menu3
+for i in range(1):
+    grid0 = []  # original grid, not to be modified
+    grid = []  # second grid, zeros can be modified
+    print_menuOne()
     try:
         action = int(input("\nWhat would you like to do? "))
         if action == 1:
             os.system("clear")
-            print("\n[1] Easy")
-            print("[2] Medium")
-            print("[3] Hard")
+            print_menuTwo()
             action2 = int(input("\nChoose a level! "))
             if action2 == 1:
                 grid0 = easy
@@ -116,7 +146,7 @@ while True:
             grid = deepcopy(grid0)
             os.system("clear")
             print_sudoku(grid0, COLORS["grey"], COLORS["white"])
-            break
+            # innen kivettem egy break-et és ezért működik (előtte csak a sudoku-ig rajzolta ki)
         elif action == 2:
             os.system("clear")
             file = "saved_sudoku.pickle"
@@ -132,25 +162,60 @@ while True:
     except ValueError:
         os.system("clear")
         print(COLORS["red"] + ERRORS[4] + COLORS["white"])
+    while True:
+        if grid == winwin:  # winning
+            print_win()
+            break
+        else:
+            print_menuThree()
+            try:
+                action3 = int(input("\nWhat would you like to do? "))
+                try:
+                    if action3 == 1:
+                        grid = grid_new(grid, COLORS["red"], COLORS["white"])
+                        print_sudoku(grid, COLORS["grey"], COLORS["white"])
+                    elif action3 == 2:
+                        grid = grid_delete(grid, COLORS["red"], COLORS["white"])
+                        print_sudoku(grid, COLORS["grey"], COLORS["white"])
+                    elif action3 == 3:
+                        file = "saved_sudoku.pickle"
+                        with open(file, "wb") as f:
+                            pickle.dump(grid, f)
+                        saving = input("Are you sure you want to save and quit? (y/n)")
+                        if saving == "y":
+                            os.system("clear")
+                            print("Sudoku game saved!\n")
+                            break
+                        elif saving == "n":
+                            os.system("clear")
+                            print_sudoku(grid, COLORS["grey"], COLORS["white"])
+                        else:
+                            os.system("clear")
+                            print(COLORS["red"] + ERRORS[5] + COLORS["white"])
+                            print_sudoku(grid, COLORS["grey"], COLORS["white"])
+                    elif action3 == 4:
+                        break
+                    else:
+                        os.system("clear")
+                        print(COLORS["red"] + ERRORS[4] + COLORS["white"])
+                        print_sudoku(grid, COLORS["grey"], COLORS["white"])
+                except ValueError:
+                    os.system("clear")
+                    print(COLORS["red"] + ERRORS[6] + COLORS["white"])
+                    print_sudoku(grid, COLORS["grey"], COLORS["white"])
+            except ValueError:
+                os.system("clear")
+                print(COLORS["red"] + ERRORS[4] + COLORS["white"])
+                print_sudoku(grid, COLORS["grey"], COLORS["white"])
 
-
+'''
 # menu3
 while True:
     if grid == winwin:  # winning
-        print(COLORS["blue"] + r"""
-     __        __  ___   _   _   _
-     \ \      / / |_ _| | \ | | | |
-      \ \ /\ / /   | |  |  \| | | |
-       \ V  V /    | |  | |\  | |_|
-        \_/\_/    |___| |_| \_| (_)
-
-    """ + COLORS["white"])
+        print_win()
         break
     else:
-        print("\n[1] Add number")
-        print("[2] Delete number")
-        print("[3] Save game")
-        print("[4] Exit game")
+        print_menuThree()
         try:
             action3 = int(input("\nWhat would you like to do? "))
             try:
@@ -190,3 +255,4 @@ while True:
             os.system("clear")
             print(COLORS["red"] + ERRORS[4] + COLORS["white"])
             print_sudoku(grid, COLORS["grey"], COLORS["white"])
+'''
