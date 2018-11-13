@@ -17,6 +17,8 @@ gend = "\033[0m"
 ebegin = "\033[91m"
 eend = "\033[0m"
 
+
+
 # original grid, not to be modified
 grid0 = []
 
