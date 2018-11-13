@@ -12,21 +12,20 @@ COLORS = [
     "\033[0m",  # white
     ]
 
-grid0 = []  # original grid, not to be modified
-grid = []  # second grid, zeros can be modified
-
 # row and column indexing
-index_cap = {"A": 1, "B": 2, "C": 3, "D": 4, "E": 5, "F": 6, "G": 7, "H": 8, "I": 9}
-index_small = {"a": 1, "b": 2, "c": 3, "d": 4, "e": 5, "f": 6, "g": 7, "h": 8, "i": 9}
+INDEX_CAP = {"A": 1, "B": 2, "C": 3, "D": 4, "E": 5, "F": 6, "G": 7, "H": 8, "I": 9}
+INDEX_SMALL = {"a": 1, "b": 2, "c": 3, "d": 4, "e": 5, "f": 6, "g": 7, "h": 8, "i": 9}
 
 # error messages used
-error1 = "\nThis number is already in that row."
-error2 = "\nThis number is already in that column."
-error3 = "\nOriginal board cannot be modified."
-error4 = "\nNumber must be between 1 and 9."
-error5 = "\nPlease enter a number from the list below."
-error6 = "\nPlease enter either \"y\" or \"n\" after choosing save."
-error7 = "\nPlease enter requested characters."
+ERRORS = [
+    "\nThis number is already in that row.",  # error1
+    "\nThis number is already in that column.",  # error2
+    "\nOriginal board cannot be modified.",  # error3
+    "\nNumber must be between 1 and 9.",  # error4
+    "\nPlease enter a number from the list below.",  # error5
+    "\nPlease enter either \"y\" or \"n\" after choosing save.",  # error6
+    "\nPlease enter requested characters.",  # error7
+    ]
 
 
 # middle part of long print line in print_sudoku
@@ -58,22 +57,22 @@ def grid_new(board, c_error, c_end):
     row_in = str(input("\nSelect a row (A - I): "))
     column_in = str(input("Select a column (a - i): "))
     num = int(input("Enter a number (1-9): "))
-    if num in board[int(index_cap[row_in]) - 1]:  # checking row
+    if num in board[int(INDEX_CAP[row_in]) - 1]:  # checking row
         os.system("clear")
-        print(c_error + error1 + c_end)
-    elif num in [col[int(index_small[column_in])] for col in board]:  # checking column
+        print(c_error + ERRORS[0] + c_end)
+    elif num in [col[int(INDEX_SMALL[column_in])] for col in board]:  # checking column
         os.system("clear")
-        print(c_error + error2 + c_end)
+        print(c_error + ERRORS[1] + c_end)
     elif num > 0 and num < 10:  # checking if number is between 1 and 9
-        if grid0[int(index_cap[row_in]) - 1][int(index_small[(column_in)])] == 0:
-            board[int(index_cap[row_in]) - 1][int(index_small[(column_in)])] = num
+        if grid0[int(INDEX_CAP[row_in]) - 1][int(INDEX_SMALL[(column_in)])] == 0:
+            board[int(INDEX_CAP[row_in]) - 1][int(INDEX_SMALL[(column_in)])] = num
             os.system("clear")
         else:
             os.system("clear")
-            print(c_error + error3 + c_end)
+            print(c_error + ERRORS[2] + c_end)
     else:
         os.system("clear")
-        print(c_error + error4 + c_end)
+        print(c_error + ERRORS[3] + c_end)
     return board
 
 
@@ -82,17 +81,19 @@ def grid_delete(board, c_error, c_end):
     print("\nDefine place for number to delete.")
     row_in = str(input("\nSelect a row (A - I): "))
     column_in = str(input("Select a column (a - i): "))
-    if grid0[int(index_cap[row_in]) - 1][int(index_small[(column_in)])] == 0:
-        board[int(index_cap[row_in]) - 1][int(index_small[(column_in)])] = 0
+    if grid0[int(INDEX_CAP[row_in]) - 1][int(INDEX_SMALL[(column_in)])] == 0:
+        board[int(INDEX_CAP[row_in]) - 1][int(INDEX_SMALL[(column_in)])] = 0
         os.system("clear")
     else:
         os.system("clear")
-        print(c_error + error3 + c_end)
+        print(c_error + ERRORS[2] + c_end)
     return board
 
 
 # menu1 & menu2
 while True:
+    grid0 = []  # original grid, not to be modified
+    grid = []  # second grid, zeros can be modified
     print("\nWelcome to the Sudoku Game!\nMenu:")
     print("[1] Print New Board")
     print("[2] Load Saved Game")
@@ -127,23 +128,23 @@ while True:
                 break
         else:
             os.system("clear")
-            print(COLORS[0] + error5 + COLORS[3])
+            print(COLORS[0] + ERRORS[4] + COLORS[3])
     except ValueError:
         os.system("clear")
-        print(COLORS[0] + error5 + COLORS[3])
+        print(COLORS[0] + ERRORS[4] + COLORS[3])
 
 
 # menu3
 while True:
     if grid == winwin:  # winning
-        print(cbegin + """
+        print(COLORS[1] + r"""
      __        __  ___   _   _   _
      \ \      / / |_ _| | \ | | | |
       \ \ /\ / /   | |  |  \| | | |
        \ V  V /    | |  | |\  | |_|
         \_/\_/    |___| |_| \_| (_)
 
-    """ + cend)
+    """ + COLORS[0])
         break
     else:
         print("\n[1] Add number")
@@ -173,20 +174,20 @@ while True:
                         print_sudoku(grid, COLORS[2], COLORS[3])
                     else:
                         os.system("clear")
-                        print(ebegin + error6 + eend)
+                        print(COLORS[0] + ERRORS[5] + COLORS[3])
                         print_sudoku(grid, COLORS[2], COLORS[3])
                 elif action3 == 4:
                     break
                 else:
                     os.system("clear")
-                    print(ebegin + error5 + eend)
+                    print(COLORS[0] + ERRORS[4] + COLORS[3])
                     print_sudoku(grid, COLORS[2], COLORS[3])
             except ValueError:
                 os.system("clear")
-                print(ebegin + error7 + eend)
+                print(COLORS[0] + ERRORS[6] + COLORS[3])
                 print_sudoku(grid, COLORS[2], COLORS[3])
         except ValueError:
             os.system("clear")
             os.system("clear")
-            print(ebegin + error5 + eend)
+            print(COLORS[0] + ERRORS[4] + COLORS[3])
             print_sudoku(grid, COLORS[2], COLORS[3])
