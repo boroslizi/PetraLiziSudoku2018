@@ -25,6 +25,7 @@ ERRORS = [
     "\nPlease enter a number from the list below.",  # error5
     "\nPlease enter either \"y\" or \"n\" after choosing save.",  # error6
     "\nPlease enter requested characters.",  # error7
+    "\nThis number is already in that grid."  # error8
     ]
 
 
@@ -57,21 +58,17 @@ def grid_new(board, c_error, c_end):
     row_in = str(input("\nSelect a row (A - I): "))
     column_in = str(input("Select a column (a - i): "))
     num = int(input("Enter a number (1-9): "))
+    os.system("clear")
     if num in board[int(INDEX_CAP[row_in]) - 1]:  # checking row
-        os.system("clear")
         print(c_error + ERRORS[0] + c_end)
     elif num in [col[int(INDEX_SMALL[column_in])] for col in board]:  # checking column
-        os.system("clear")
         print(c_error + ERRORS[1] + c_end)
     elif num > 0 and num < 10:  # checking if number is between 1 and 9
         if grid0[int(INDEX_CAP[row_in]) - 1][int(INDEX_SMALL[(column_in)])] == 0:
             board[int(INDEX_CAP[row_in]) - 1][int(INDEX_SMALL[(column_in)])] = num
-            os.system("clear")
         else:
-            os.system("clear")
             print(c_error + ERRORS[2] + c_end)
     else:
-        os.system("clear")
         print(c_error + ERRORS[3] + c_end)
     return board
 
@@ -81,11 +78,10 @@ def grid_delete(board, c_error, c_end):
     print("\nDefine place for number to delete.")
     row_in = str(input("\nSelect a row (A - I): "))
     column_in = str(input("Select a column (a - i): "))
+    os.system("clear")
     if grid0[int(INDEX_CAP[row_in]) - 1][int(INDEX_SMALL[(column_in)])] == 0:
         board[int(INDEX_CAP[row_in]) - 1][int(INDEX_SMALL[(column_in)])] = 0
-        os.system("clear")
     else:
-        os.system("clear")
         print(c_error + ERRORS[2] + c_end)
     return board
 
@@ -94,6 +90,14 @@ def grid_delete(board, c_error, c_end):
 while True:
     grid0 = []  # original grid, not to be modified
     grid = []  # second grid, zeros can be modified
+    print(COLORS[1] + """
+  ____                _           _                _____       _
+ / ___|   _   _    __| |   ___   | | __  _   _    |___ /      / |
+ \___ \  | | | |  / _` |  / _ \  | |/ / | | | |     |_ \      | |
+  ___) | | |_| | | (_| | | (_) | |   <  | |_| |    ___) |  _  | |
+ |____/   \__,_|  \__,_|  \___/  |_|\_\  \__,_|   |____/  (_) |_|
+
+    """ + COLORS[3])
     print("\nWelcome to the Sudoku Game!\nMenu:")
     print("[1] Print New Board")
     print("[2] Load Saved Game")
@@ -144,7 +148,7 @@ while True:
        \ V  V /    | |  | |\  | |_|
         \_/\_/    |___| |_| \_| (_)
 
-    """ + COLORS[0])
+    """ + COLORS[3])
         break
     else:
         print("\n[1] Add number")
@@ -187,7 +191,6 @@ while True:
                 print(COLORS[0] + ERRORS[6] + COLORS[3])
                 print_sudoku(grid, COLORS[2], COLORS[3])
         except ValueError:
-            os.system("clear")
             os.system("clear")
             print(COLORS[0] + ERRORS[4] + COLORS[3])
             print_sudoku(grid, COLORS[2], COLORS[3])
