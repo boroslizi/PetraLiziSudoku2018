@@ -5,12 +5,8 @@ from copy import deepcopy
 from grids import easy, medium, hard, win0, winwin
 os.system("clear")
 
-COLORS = [
-    "\033[91m",  # red
-    "\033[34m",  # blue
-    "\033[90m",  # grey
-    "\033[0m",  # white
-    ]
+# different color used for printing
+COLORS = {"red": "\033[91m", "blue": "\033[34m", "grey": "\033[90m", "white": "\033[0m"}
 
 # row and column indexing
 INDEX_CAP = {"A": 1, "B": 2, "C": 3, "D": 4, "E": 5, "F": 6, "G": 7, "H": 8, "I": 9}
@@ -18,14 +14,14 @@ INDEX_SMALL = {"a": 1, "b": 2, "c": 3, "d": 4, "e": 5, "f": 6, "g": 7, "h": 8, "
 
 # error messages used
 ERRORS = [
-    "\nThis number is already in that row.",  # error1
-    "\nThis number is already in that column.",  # error2
-    "\nOriginal board cannot be modified.",  # error3
-    "\nNumber must be between 1 and 9.",  # error4
-    "\nPlease enter a number from the list below.",  # error5
-    "\nPlease enter either \"y\" or \"n\" after choosing save.",  # error6
-    "\nPlease enter requested characters.",  # error7
-    "\nThis number is already in that grid."  # error8
+    "\nThis number is already in that row.",
+    "\nThis number is already in that column.",
+    "\nOriginal board cannot be modified.",
+    "\nNumber must be between 1 and 9.",
+    "\nPlease enter a number from the list below.",
+    "\nPlease enter either \"y\" or \"n\" after choosing save.",
+    "\nPlease enter requested characters.",
+    "\nThis number is already in that grid."
     ]
 
 
@@ -44,7 +40,7 @@ def print_sudoku(board, c_grid, c_end):
             def compr():
                 return ([x if x != 0 else " " for x in row])
 
-            print((c_grid + "{} ║" + c_end + (long_line(COLORS[2], COLORS[3]))*3).format(*compr()))
+            print((c_grid + "{} ║" + c_end + (long_line(COLORS["grey"], COLORS["white"]))*3).format(*compr()))
             if i % 3 == 2 and i < 8:
                 print(c_grid + "  ╠" + ("═══╪═══╪═══╬"*2) + "═══╪═══╪═══╣" + c_end)
             elif i == 8:
@@ -90,14 +86,14 @@ def grid_delete(board, c_error, c_end):
 while True:
     grid0 = []  # original grid, not to be modified
     grid = []  # second grid, zeros can be modified
-    print(COLORS[1] + """
+    print(COLORS["blue"] + r"""
   ____                _           _                _____       _
  / ___|   _   _    __| |   ___   | | __  _   _    |___ /      / |
  \___ \  | | | |  / _` |  / _ \  | |/ / | | | |     |_ \      | |
   ___) | | |_| | | (_| | | (_) | |   <  | |_| |    ___) |  _  | |
  |____/   \__,_|  \__,_|  \___/  |_|\_\  \__,_|   |____/  (_) |_|
 
-    """ + COLORS[3])
+    """ + COLORS["white"])
     print("\nWelcome to the Sudoku Game!\nMenu:")
     print("[1] Print New Board")
     print("[2] Load Saved Game")
@@ -119,7 +115,7 @@ while True:
                 grid0 = win0
             grid = deepcopy(grid0)
             os.system("clear")
-            print_sudoku(grid0, COLORS[2], COLORS[3])
+            print_sudoku(grid0, COLORS["grey"], COLORS["white"])
             break
         elif action == 2:
             os.system("clear")
@@ -128,27 +124,27 @@ while True:
                 grid0 = pickle.load(f)
                 grid = deepcopy(grid0)
                 os.system("clear")
-                print_sudoku(grid0, COLORS[2], COLORS[3])
+                print_sudoku(grid0, COLORS["grey"], COLORS["white"])
                 break
         else:
             os.system("clear")
-            print(COLORS[0] + ERRORS[4] + COLORS[3])
+            print(COLORS["red"] + ERRORS[4] + COLORS["white"])
     except ValueError:
         os.system("clear")
-        print(COLORS[0] + ERRORS[4] + COLORS[3])
+        print(COLORS["red"] + ERRORS[4] + COLORS["white"])
 
 
 # menu3
 while True:
     if grid == winwin:  # winning
-        print(COLORS[1] + r"""
+        print(COLORS["blue"] + r"""
      __        __  ___   _   _   _
      \ \      / / |_ _| | \ | | | |
       \ \ /\ / /   | |  |  \| | | |
        \ V  V /    | |  | |\  | |_|
         \_/\_/    |___| |_| \_| (_)
 
-    """ + COLORS[3])
+    """ + COLORS["white"])
         break
     else:
         print("\n[1] Add number")
@@ -159,11 +155,11 @@ while True:
             action3 = int(input("\nWhat would you like to do? "))
             try:
                 if action3 == 1:
-                    grid = grid_new(grid, COLORS[0], COLORS[3])
-                    print_sudoku(grid, COLORS[2], COLORS[3])
+                    grid = grid_new(grid, COLORS["red"], COLORS["white"])
+                    print_sudoku(grid, COLORS["grey"], COLORS["white"])
                 elif action3 == 2:
-                    grid = grid_delete(grid, COLORS[0], COLORS[3])
-                    print_sudoku(grid, COLORS[2], COLORS[3])
+                    grid = grid_delete(grid, COLORS["red"], COLORS["white"])
+                    print_sudoku(grid, COLORS["grey"], COLORS["white"])
                 elif action3 == 3:
                     file = "saved_sudoku.pickle"
                     with open(file, "wb") as f:
@@ -175,22 +171,22 @@ while True:
                         break
                     elif saving == "n":
                         os.system("clear")
-                        print_sudoku(grid, COLORS[2], COLORS[3])
+                        print_sudoku(grid, COLORS["grey"], COLORS["white"])
                     else:
                         os.system("clear")
-                        print(COLORS[0] + ERRORS[5] + COLORS[3])
-                        print_sudoku(grid, COLORS[2], COLORS[3])
+                        print(COLORS["red"] + ERRORS[5] + COLORS["white"])
+                        print_sudoku(grid, COLORS["grey"], COLORS["white"])
                 elif action3 == 4:
                     break
                 else:
                     os.system("clear")
-                    print(COLORS[0] + ERRORS[4] + COLORS[3])
-                    print_sudoku(grid, COLORS[2], COLORS[3])
+                    print(COLORS["red"] + ERRORS[4] + COLORS["white"])
+                    print_sudoku(grid, COLORS["grey"], COLORS["white"])
             except ValueError:
                 os.system("clear")
-                print(COLORS[0] + ERRORS[6] + COLORS[3])
-                print_sudoku(grid, COLORS[2], COLORS[3])
+                print(COLORS["red"] + ERRORS[6] + COLORS["white"])
+                print_sudoku(grid, COLORS["grey"], COLORS["white"])
         except ValueError:
             os.system("clear")
-            print(COLORS[0] + ERRORS[4] + COLORS[3])
-            print_sudoku(grid, COLORS[2], COLORS[3])
+            print(COLORS["red"] + ERRORS[4] + COLORS["white"])
+            print_sudoku(grid, COLORS["grey"], COLORS["white"])
