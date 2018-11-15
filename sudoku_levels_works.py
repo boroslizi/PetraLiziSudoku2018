@@ -25,6 +25,12 @@ ERRORS = [
     ]
 
 
+# printing errors
+def print_error(error_number):
+    os.system("clear")
+    print(COLORS["red"] + ERRORS[error_number] + COLORS["white"])
+
+
 # printing the original grid
 def print_sudoku(board, c_grid, c_end):
     print(c_grid + "\n    a   b   c   d   e   f   g   h   i  " + c_end)
@@ -53,18 +59,18 @@ def grid_new(board, c_error, c_end):
     row_in = str(input("\nSelect a row (A - I): "))
     column_in = str(input("Select a column (a - i): "))
     num = int(input("Enter a number (1-9): "))
-    os.system("clear")
     if num in board[int(INDEX_CAP[row_in]) - 1]:  # checking row
-        print(c_error + ERRORS[0] + c_end)
+        print_error(0)
     elif num in [col[int(INDEX_SMALL[column_in])] for col in board]:  # checking column
-        print(c_error + ERRORS[1] + c_end)
+        print_error(1)
     elif 0 < num < 10:  # checking if number is between 1 and 9
         if grid0[int(INDEX_CAP[row_in]) - 1][int(INDEX_SMALL[(column_in)])] == 0:
             board[int(INDEX_CAP[row_in]) - 1][int(INDEX_SMALL[(column_in)])] = num
+            os.system("clear")
         else:
-            print(c_error + ERRORS[2] + c_end)
+            print_error(2)
     else:
-        print(c_error + ERRORS[3] + c_end)
+        print_error(3)
     return board
 
 
@@ -73,11 +79,11 @@ def grid_delete(board, c_error, c_end):
     print("\nDefine place for number to delete.")
     row_in = str(input("\nSelect a row (A - I): "))
     column_in = str(input("Select a column (a - i): "))
-    os.system("clear")
     if grid0[int(INDEX_CAP[row_in]) - 1][int(INDEX_SMALL[(column_in)])] == 0:
         board[int(INDEX_CAP[row_in]) - 1][int(INDEX_SMALL[(column_in)])] = 0
+        os.system("clear")
     else:
-        print(c_error + ERRORS[2] + c_end)
+        print_error(2)
     return board
 
 
@@ -140,9 +146,8 @@ while True:
         os.system("clear")
         print_menuTwo()
         action2 = input("\nChoose a level! ")
-        while action2 not in ["1", "2", "3", "4"]:  # instead of the original else (which did not work ha)
-            os.system("clear")
-            print(COLORS["red"] + ERRORS[4] + COLORS["white"])
+        while action2 not in ["1", "2", "3", "4"]:
+            print_error(4)
             print_menuTwo()
             action2 = input("\nChoose a level! ")
         if action2 == "1":  # Easy
@@ -171,11 +176,10 @@ while True:
             print_sudoku(grid0, COLORS["grey"], COLORS["white"])
             break
     else:
-        os.system("clear")
-        print(COLORS["red"] + ERRORS[4] + COLORS["white"])
+        print_error(4)
 
 # menu3
-while grid != winwin:  # winning (only for grid0=win0)
+while grid != winwin:
     print_menuThree()
     action3 = input("\nWhat would you like to do? ")
     try:
@@ -198,18 +202,15 @@ while grid != winwin:  # winning (only for grid0=win0)
                 os.system("clear")
                 print_sudoku(grid, COLORS["grey"], COLORS["white"])
             else:
-                os.system("clear")
-                print(COLORS["red"] + ERRORS[5] + COLORS["white"])
+                print_error(5)
                 print_sudoku(grid, COLORS["grey"], COLORS["white"])
         elif action3 == "4":  # "Exit game"
             break
         else:
-            os.system("clear")
-            print(COLORS["red"] + ERRORS[4] + COLORS["white"])
+            print_error(4)
             print_sudoku(grid, COLORS["grey"], COLORS["white"])
     except (ValueError, KeyError):
-        os.system("clear")
-        print(COLORS["red"] + ERRORS[6] + COLORS["white"])
+        print_error(6)
         print_sudoku(grid, COLORS["grey"], COLORS["white"])
 
 if grid == winwin:
